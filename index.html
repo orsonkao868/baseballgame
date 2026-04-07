@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OK小站 — Orson Kao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#080808;--deep:#0f0f0f;--card:#141414;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#8a6f2e;
+  --white:#f0ece4;--white-dim:#a09890;
+  --border:rgba(201,168,76,0.2);--border-bright:rgba(201,168,76,0.5);
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Noto Serif TC',serif;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.3s,height 0.3s,opacity 0.3s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,width 0.3s,height 0.3s}
+.cursor.expand{width:24px;height:24px;opacity:0.3}
+.cursor-ring.expand{width:60px;height:60px}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4}
+.glow-orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.glow-1{width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);top:-200px;right:-100px;animation:float1 8s ease-in-out infinite}
+.glow-2{width:400px;height:400px;background:radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 70%);bottom:10%;left:-100px;animation:float2 10s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,40px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,-30px)}}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 60px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(8,8,8,0.95),transparent);backdrop-filter:blur(8px)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:4px;color:var(--gold);text-decoration:none;opacity:0;animation:fadeIn 1s 0.3s forwards}
+.nav-links{display:flex;gap:40px;list-style:none;opacity:0;animation:fadeIn 1s 0.5s forwards}
+.nav-links a{color:var(--white-dim);text-decoration:none;font-size:12px;letter-spacing:3px;font-family:'Space Mono',monospace;text-transform:uppercase;transition:color 0.3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform 0.3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after{transform:scaleX(1)}
+#hero{min-height:100vh;display:flex;align-items:center;padding:120px 60px 60px;position:relative;overflow:hidden}
+.hero-content{position:relative;z-index:1;max-width:700px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:32px;opacity:0;animation:slideUp 0.8s 0.6s forwards;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:var(--gold);display:block}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,8vw,110px);font-weight:300;line-height:1;color:var(--white);margin-bottom:8px;opacity:0;animation:slideUp 0.8s 0.8s forwards}
+.hero-title em{font-style:italic;color:var(--gold);display:block}
+.hero-subtitle{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,20px);font-weight:300;letter-spacing:6px;color:var(--white-dim);margin-bottom:48px;opacity:0;animation:slideUp 0.8s 1s forwards}
+.hero-desc{font-size:16px;line-height:2;color:var(--white-dim);max-width:480px;margin-bottom:60px;opacity:0;animation:slideUp 0.8s 1.2s forwards;font-weight:300}
+.hero-desc strong{color:var(--white);font-weight:400}
+.hero-cta{display:flex;gap:20px;flex-wrap:wrap;opacity:0;animation:slideUp 0.8s 1.4s forwards}
+.btn-gold{padding:16px 40px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;cursor:none;transition:all 0.3s;position:relative;overflow:hidden}
+.btn-gold::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateX(-101%);transition:transform 0.3s}
+.btn-gold:hover{color:var(--black)}
+.btn-gold:hover::before{transform:translateX(0)}
+.btn-gold span{position:relative;z-index:1}
+.btn-ghost{padding:16px 40px;border:1px solid rgba(240,236,228,0.2);background:transparent;color:var(--white-dim);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;cursor:none;transition:all 0.3s}
+.btn-ghost:hover{border-color:var(--white-dim);color:var(--white)}
+.floating-card{position:absolute;right:60px;top:50%;transform:translateY(-50%);width:300px;opacity:0;animation:cardFloat 1s 1.6s forwards;z-index:2}
+@keyframes cardFloat{0%{opacity:0;transform:translateY(-40%) rotate(5deg)}100%{opacity:1;transform:translateY(-50%) rotate(-2deg)}}
+.card-inner{background:linear-gradient(135deg,var(--card) 0%,#1a1410 100%);border:1px solid var(--border-bright);padding:40px;border-radius:2px;position:relative;overflow:hidden;animation:cardSway 6s ease-in-out infinite;box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.1)}
+@keyframes cardSway{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-10px)}}
+.card-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.card-inner::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.08),transparent);top:-60px;right:-60px}
+.card-logo{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--gold);letter-spacing:2px;margin-bottom:24px}
+.card-divider{width:40px;height:1px;background:var(--gold-dim);margin-bottom:24px}
+.card-name{font-size:18px;font-weight:400;color:var(--white);margin-bottom:4px;letter-spacing:1px}
+.card-role{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:32px}
+.card-contact{display:flex;flex-direction:column;gap:8px}
+.card-contact a{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--white-dim);text-decoration:none;transition:color 0.3s;display:flex;align-items:center;gap:8px}
+.card-contact a:hover{color:var(--gold)}
+.card-contact a::before{content:'';width:16px;height:1px;background:currentColor;flex-shrink:0}
+.section-divider{display:flex;align-items:center;gap:20px;padding:0 60px;margin-bottom:80px}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-divider span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--gold-dim);text-transform:uppercase}
+section{padding:100px 60px;position:relative;z-index:1}
+.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:24px;height:1px;background:var(--gold)}
+.section-number{font-family:'Cormorant Garamond',serif;font-size:120px;font-weight:300;color:rgba(201,168,76,0.04);position:absolute;right:60px;top:-20px;line-height:1;pointer-events:none}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,64px);font-weight:300;color:var(--white);line-height:1.1;margin-bottom:60px}
+.section-title em{font-style:italic;color:var(--gold)}
+#about .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-text{font-size:16px;line-height:2.2;color:var(--white-dim);font-weight:300}
+.about-text p{margin-bottom:24px}
+.about-text strong{color:var(--white);font-weight:400}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.stat-box{background:var(--card);border:1px solid var(--border);padding:36px 28px;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s}
+.stat-box:hover{border-color:var(--border-bright);transform:translateY(-4px)}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.3s}
+.stat-box:hover::before{opacity:1}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold);line-height:1;margin-bottom:8px}
+.stat-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--white-dim);text-transform:uppercase}
+#skills .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.skill-card{background:var(--card);border:1px solid var(--border);padding:40px 32px;transition:all 0.4s;position:relative;overflow:hidden;cursor:none}
+.skill-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,0.05),transparent);opacity:0;transition:opacity 0.4s}
+.skill-card:hover{border-color:var(--border-bright);transform:translateY(-6px)}
+.skill-card:hover::after{opacity:1}
+.skill-icon{font-size:36px;margin-bottom:24px;display:block;filter:grayscale(0.3);transition:filter 0.3s}
+.skill-card:hover .skill-icon{filter:grayscale(0)}
+.skill-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--white);margin-bottom:8px}
+.skill-name-en{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.skill-desc{font-size:14px;line-height:1.8;color:var(--white-dim);font-weight:300}
+.skill-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
+.skill-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--border);color:var(--white-dim);text-transform:uppercase}
+#works .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.work-card{background:var(--card);border:1px solid var(--border);padding:40px 32px;transition:all 0.4s;cursor:none;position:relative;overflow:hidden;text-decoration:none;display:block}
+.work-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform 0.4s}
+.work-card:hover{border-color:var(--border-bright);transform:translateY(-6px)}
+.work-card:hover::before{transform:scaleX(1)}
+.work-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:rgba(201,168,76,0.15);line-height:1;margin-bottom:24px}
+.work-type{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+.work-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--white);margin-bottom:8px;line-height:1.2}
+.work-name-en{font-size:13px;color:var(--white-dim);margin-bottom:20px;font-weight:300}
+.work-desc{font-size:14px;line-height:1.8;color:var(--white-dim);margin-bottom:24px;font-weight:300}
+.work-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.work-link::after{content:'→';transition:transform 0.3s}
+.work-card:hover .work-link::after{transform:translateX(6px)}
+#contact{text-align:center;padding:120px 60px;position:relative;overflow:hidden}
+#contact::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.05),transparent);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.contact-subtitle{font-size:16px;color:var(--white-dim);max-width:400px;margin:0 auto 60px;line-height:2;font-weight:300}
+.contact-email{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,48px);font-weight:300;color:var(--white);text-decoration:none;border-bottom:1px solid var(--border-bright);padding-bottom:8px;transition:color 0.3s,border-color 0.3s;display:inline-block;margin-bottom:60px}
+.contact-email:hover{color:var(--gold);border-color:var(--gold)}
+.contact-links{display:flex;justify-content:center;gap:32px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px}
+.contact-links a{color:var(--white-dim);text-decoration:none;text-transform:uppercase;transition:color 0.3s;display:flex;align-items:center;gap:8px}
+.contact-links a::before{content:'';width:20px;height:1px;background:currentColor}
+.contact-links a:hover{color:var(--gold)}
+footer{padding:40px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.footer-copy{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--white-dim)}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--gold);letter-spacing:3px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s,transform 0.8s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold-dim),var(--gold));z-index:200;transition:width 0.1s}
+@media(max-width:768px){
+  nav{padding:20px 24px}
+  .nav-links{display:none}
+  #hero{padding:100px 24px 60px;flex-direction:column}
+  .floating-card{position:relative;right:auto;top:auto;transform:none;width:100%;margin-top:48px}
+  @keyframes cardFloat{0%{opacity:0}100%{opacity:1;transform:rotate(-1deg)}}
+  @keyframes cardSway{0%,100%{transform:rotate(-1deg) translateY(0)}50%{transform:rotate(-1deg) translateY(-6px)}}
+  section{padding:80px 24px}
+  .section-divider{padding:0 24px}
+  #about .about-grid{grid-template-columns:1fr}
+  #skills .skills-grid{grid-template-columns:1fr}
+  #works .works-grid{grid-template-columns:1fr}
+  footer{padding:32px 24px;flex-direction:column;gap:16px;text-align:center}
+  #contact{padding:80px 24px}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="glow-orb glow-1"></div>
+<div class="glow-orb glow-2"></div>
+
+<nav>
+  <a class="nav-logo" href="#">OK小站</a>
+  <ul class="nav-links">
+    <li><a href="#about">關於</a></li>
+    <li><a href="#skills">技能</a></li>
+    <li><a href="#works">作品</a></li>
+    <li><a href="#contact">聯絡</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Web Developer & Designer</div>
+    <h1 class="hero-title">Orson<br><em>Kao</em></h1>
+    <div class="hero-subtitle">OK · CREATIVE STUDIO</div>
+    <p class="hero-desc">
+      以<strong>想像力</strong>為筆，以<strong>程式</strong>為墨。<br>
+      讓每一個數位體驗，都成為客戶心中<strong>最滿意的樣子</strong>。
+    </p>
+    <div class="hero-cta">
+      <a href="#works" class="btn-gold"><span>查看作品</span></a>
+      <a href="#contact" class="btn-ghost">聯絡我</a>
+    </div>
+  </div>
+
+  <div class="floating-card">
+    <div class="card-inner">
+      <div class="card-logo">OK</div>
+      <div class="card-divider"></div>
+      <div class="card-name">Orson Kao</div>
+      <div class="card-role">Web Developer · Designer</div>
+      <div class="card-contact">
+        <a href="mailto:orsonkao868@gmail.com">orsonkao868@gmail.com</a>
+        <a href="https://github.com/orsonkao868" target="_blank">github.com/orsonkao868</a>
+        <a href="#">LINE — 即將更新</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"><span>About</span></div>
+
+<section id="about">
+  <div style="position:relative">
+    <span class="section-number">01</span>
+    <div class="section-label">關於我</div>
+    <h2 class="section-title">想像力是<em>最強大</em><br>的設計工具</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>我是 <strong>Orson Kao</strong>，一位具備豐富想像力的網站開發者與設計師。我相信每一個網站都是一個故事，每一行程式碼都承載著客戶的夢想。</p>
+      <p>從視覺設計到功能實現，我擅長將抽象的創意轉化為<strong>具體的數位體驗</strong>。無論是精緻的互動設計，還是複雜的系統架構，我都能帶給客戶<strong>超乎預期的成果</strong>。</p>
+      <p>我的目標很簡單：讓每一位客戶，在看到成品的那一刻，都能感受到<strong>那份恰到好處的滿意</strong>。</p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat-box">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">完整作品</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">創意無限</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">客戶滿意</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">持續學習</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"><span>Skills</span></div>
+
+<section id="skills">
+  <div style="position:relative">
+    <span class="section-number">02</span>
+    <div class="section-label">專業技能</div>
+    <h2 class="section-title">以技術<em>實現</em><br>每一個想像</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <span class="skill-icon">🏗️</span>
+      <div class="skill-name">網站架構</div>
+      <div class="skill-name-en">Web Architecture</div>
+      <div class="skill-desc">從零開始規劃完整的網站架構，確保每一個環節都穩固且具備擴展性。</div>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML</span><span class="skill-tag">CSS</span>
+        <span class="skill-tag">JavaScript</span><span class="skill-tag">PWA</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">⚙️</span>
+      <div class="skill-name">程式設計</div>
+      <div class="skill-name-en">Programming</div>
+      <div class="skill-desc">將複雜的邏輯以優雅的程式碼實現，打造高效能且易於維護的系統。</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span><span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Express</span><span class="skill-tag">API</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">✨</span>
+      <div class="skill-name">視覺設計</div>
+      <div class="skill-name-en">Visual Design</div>
+      <div class="skill-desc">融合美感與功能性，創造令人印象深刻的視覺體驗與互動設計。</div>
+      <div class="skill-tags">
+        <span class="skill-tag">UI/UX</span><span class="skill-tag">Animation</span>
+        <span class="skill-tag">Canvas</span><span class="skill-tag">SVG</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"><span>Works</span></div>
+
+<section id="works">
+  <div style="position:relative">
+    <span class="section-number">03</span>
+    <div class="section-label">精選作品</div>
+    <h2 class="section-title">每一個作品<br>都是一次<em>超越</em></h2>
+  </div>
+  <div class="works-grid">
+    <a class="work-card reveal" href="https://orsonkao868.github.io/danatus/" target="_blank">
+      <div class="work-num">01</div>
+      <div class="work-type">Game · Interactive</div>
+      <div class="work-name">達納特斯<br>遊戲世界</div>
+      <div class="work-name-en">Danatus Game Universe</div>
+      <div class="work-desc">包含多款網頁遊戲的完整遊戲世界，從元素對戰到社畜陀螺，展現豐富的遊戲設計能力。</div>
+      <div class="work-link">查看作品</div>
+    </a>
+    <a class="work-card reveal" href="https://orsonkao868.github.io/justmoneybook/" target="_blank">
+      <div class="work-num">02</div>
+      <div class="work-type">App · PWA</div>
+      <div class="work-name">就是記帳</div>
+      <div class="work-name-en">JustMoneyBook</div>
+      <div class="work-desc">懶人專屬的超直觀記帳 App，支援雲端同步、多主題、AI 功能，可安裝到手機桌面。</div>
+      <div class="work-link">查看作品</div>
+    </a>
+    <div class="work-card reveal">
+      <div class="work-num">03</div>
+      <div class="work-type">App · Travel</div>
+      <div class="work-name">揪揪去</div>
+      <div class="work-name-en">JojoTrip</div>
+      <div class="work-desc">多人旅遊行程規劃 App，結合 AI 排程、地圖探索、景點投票，讓旅行規劃更輕鬆有趣。</div>
+      <div class="work-link" style="color:var(--white-dim)">開發中 · Coming Soon</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"><span>Contact</span></div>
+
+<section id="contact">
+  <div class="section-label" style="justify-content:center;margin-bottom:20px">聯絡我</div>
+  <h2 class="section-title" style="margin-bottom:24px">讓我們一起<br>創造<em>不凡</em></h2>
+  <p class="contact-subtitle reveal">有任何想法或合作機會？<br>我很樂意聽你說，並一起實現它。</p>
+  <div class="reveal">
+    <a href="mailto:orsonkao868@gmail.com" class="contact-email">orsonkao868@gmail.com</a>
+  </div>
+  <div class="contact-links reveal">
+    <a href="https://github.com/orsonkao868" target="_blank">GitHub</a>
+    <a href="#">LINE — 即將更新</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2026 Orson Kao · All Rights Reserved</div>
+  <div class="footer-logo">OK</div>
+</footer>
+
+<script>
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+function animateRing(){
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a,button,.skill-card,.work-card,.stat-box').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('expand');ring.classList.add('expand')});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('expand');ring.classList.remove('expand')});
+});
+const progressBar=document.getElementById('progress-bar');
+window.addEventListener('scroll',()=>{
+  const scrolled=window.scrollY;
+  const total=document.body.scrollHeight-window.innerHeight;
+  progressBar.style.width=(scrolled/total*100)+'%';
+});
+const reveals=document.querySelectorAll('.reveal');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach((entry,i)=>{
+    if(entry.isIntersecting) setTimeout(()=>entry.target.classList.add('visible'),i*120);
+  });
+},{threshold:0.1});
+reveals.forEach(el=>observer.observe(el));
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200) current=s.id;});
+  navLinks.forEach(a=>{a.style.color=a.getAttribute('href')==='#'+current?'var(--gold)':'';});
+});
+</script>
+</body>
+</html>
